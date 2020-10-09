@@ -1,3 +1,4 @@
+# Computes float in given interval that x ∗ (1/x) != 1.
 function floatInBound(start, End)
 	start = Float64(start)
 	End = Float64(End)

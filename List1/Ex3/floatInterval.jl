@@ -1,3 +1,4 @@
+# Computes 10 consecutive numbers from given start point
 delta = Float64(2) ^ (-52)
 
 function computeInterval(start)
