@@ -6,6 +6,7 @@ function floatInBound(start, End)
 	
 	while number < End
 		if number * (1 / number) != 1
+			println(bitstring(number))
 			return number
 		end
 		number = nextfloat(number)
