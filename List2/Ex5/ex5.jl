@@ -4,8 +4,8 @@ function func(type)
     println("0 & $previousP1 & $previousP2 & $(previousP2 - previousP1) & $previousP1 \\\\ \n\\hline")
     
     for n in 1:40
-        p1 = type(previousP1) + type(r*previousP1*(1-previousP1))
-        p2 = type(previousP2) + type(r*previousP2*(1-previousP2))
+        p1 = type(previousP1) + type(r * previousP1 * (1 - previousP1))
+        p2 = type(previousP2) + type(r * previousP2 * (1 - previousP2))
 
         if n==10
             p2 *= 1000
