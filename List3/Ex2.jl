@@ -5,7 +5,7 @@ function mstycznych(f, pf, x0::Float64, delta::Float64, epsilon::Float64, maxit:
 		return (x0, value, 0, 2)
 	end
 	
-	for i in 1:(maxit+1)
+	for i in 1:maxit
 		x = x0 - (value/pf(x0))
 		value = f(x)
 		
@@ -14,4 +14,5 @@ function mstycznych(f, pf, x0::Float64, delta::Float64, epsilon::Float64, maxit:
 		end
 		x0 = x
 	end
+	return(0, 0, 0, 1)
 end
