@@ -1,3 +1,4 @@
+using LinearAlgebra
 using SparseArrays
 
 function buildMatrix(path)
@@ -34,11 +35,13 @@ function buildVector(path)
 		end
 	end
 
-function saveVector(path, n, b)
+function saveVector(path, n, vector, error=false)
 	open(path, "w") do file
-		println(file, "$n")
 		for i in 1:n
-			println(b[i])
+			if error
+				println(file, relativeError(n, vector))
+			end
+			println(file, vector[i])
 		end
 	end
 end
@@ -71,7 +74,7 @@ function gaussianElimination(A, n, l, b)
 		end
 	end
 
-	return A
+	return A, b
 end
 
 function calculateGaussian(A, n, l, b)
@@ -92,8 +95,9 @@ function gaussianEliminationPivoted(A, n, l, b)
     for i in 1:n-1
         maxIndex = i                      
         maxValue = abs(A[i, i])
+        lastColumn = min(Int64((floor(i / l) + 1) * l), n)
 
-        for j in i+1:min(n, Int64((floor(i / l) + 1) * l))
+        for j in i+1:lastColumn
             absValue = abs(A[pivots[j], i])
             if absValue > maxValue
                 maxIndex = j
@@ -103,7 +107,7 @@ function gaussianEliminationPivoted(A, n, l, b)
 
         pivots[i], pivots[maxIndex] = pivots[maxIndex], pivots[i]
         
-        for j in i+1:min(n, Int64((floor(i / l) + 1) * l))
+        for j in i+1:lastColumn
             x = A[pivots[j], i] / A[pivots[i], i]
             A[pivots[j], i] = 0        
              
@@ -113,25 +117,29 @@ function gaussianEliminationPivoted(A, n, l, b)
             b[pivots[j]] -= x * b[pivots[i]]   
         end
     end
-    return A, pivots
+    return A, b, pivots
 end
 
 
 function calculateGaussianPivoted(A, n, l, b, pivots)
 	vector = zeros(Float64, n)
     for i in 1:n-1
-        for j in i+1:min(n, 2 * l + i)
+        for j in i+1:min(2 * l + i, n)
             b[pivots[j]] -= A[pivots[j], i] * b[pivots[i]]
         end
     end
 
     for j in n:-1:1
         x = 0
-        for k in  j+1:min(n, 2 * l + j)
+        for k in  j+1:min(2 * l + j, n)
             x += A[pivots[j], k] * vector[k]
         end
         
         vector[j] = (b[pivots[j]] - x) / A[pivots[j], j]
     end
     return vector
+end
+
+function relativeError(n, vector)
+	return norm(ones(n) - vector) / norm(vector)
 end
